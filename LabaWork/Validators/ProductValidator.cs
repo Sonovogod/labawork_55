@@ -25,7 +25,5 @@ public class ProductValidator : AbstractValidator<Product>
             .NotEmpty().WithMessage("Описание не должно быть пустым");
         RuleFor(product => product.Price)
             .GreaterThan(0).WithMessage("Стоимость должна быть больше 0");
-        RuleFor(product => product.Image)
-            .NotEmpty().WithMessage("Добавьте ссылку на картинку");
     }
 }

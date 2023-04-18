@@ -8,7 +8,7 @@
  <h2>Запоните поля для добавления новой позиции</h2>
 <div class="row">
     <div class="col-md-6">
-        <form asp-action="Create" method="post">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
             <div class="form-group mb-3">
                 <label for="prod_name" class="mb-2">Наименование продукта</label>
                 <input asp-for="Product.ProductName"
