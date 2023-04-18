@@ -75,12 +75,8 @@
                        placeholder="10000000000000$">
             </div>
             <div class="form-group mb-3">
-                <label for="img" class="mb-2">Картинка</label>
-                <input asp-for="Product.Image"
-                       type="text"
-                       class="form-control"
-                       id="img"
-                       placeholder="https:\\example.jpg">
+                <label class="mb-2" for="inputGroupFile01">Картинка</label>
+                <input type="file" class="form-control" id="inputGroupFile01" name="uploadedFile">
             </div>
             <button type="submit" class="btn btn-outline-info mt-3">Создать</button>
         </form>

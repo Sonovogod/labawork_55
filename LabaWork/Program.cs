@@ -23,6 +23,7 @@ builder.Services.AddScoped<CreateProduct>();
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<OrderValidator>();
 builder.Services.AddScoped<OrderAndErrors>();
+builder.Services.AddScoped<IFileService, FileService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

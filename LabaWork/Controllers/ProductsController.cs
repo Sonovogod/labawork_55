@@ -14,19 +14,21 @@ public class ProductsController : Controller
     private readonly CreateProduct _createProduct;
     private readonly ISectionService<Brand> _brandService;
     private readonly ISectionService<Category> _categoryService;
+    private readonly IFileService _fileService;
 
     public ProductsController(
         IProductService productService, 
         ProductValidator productValidator, 
         CreateProduct createProduct,
         ISectionService<Brand> brandService, 
-        ISectionService<Category> categoryService)
+        ISectionService<Category> categoryService, IFileService fileService)
     {
         _productService = productService;
         _productValidator = productValidator;
         _createProduct = createProduct;
         _brandService = brandService;
         _categoryService = categoryService;
+        _fileService = fileService;
     }
 
     [HttpGet]
@@ -44,13 +46,15 @@ public class ProductsController : Controller
     }
     
     [HttpPost]
-    public IActionResult Create(Product? product)
+    public IActionResult Create(Product? product, IFormFile uploadedFile)
     {
         if (product == null) return NotFound();
 
         var validResult = _productValidator.Validate(product);
         if (validResult.IsValid)
         {
+            _fileService.Upload($"{product.Brand}_{product.ProductName}.txt");
+            product.Image = _fileService.SaveFileAndGetPath(product, uploadedFile);
             _productService.Add(product);
         }
         else
