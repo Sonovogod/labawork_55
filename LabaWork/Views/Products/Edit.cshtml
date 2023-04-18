@@ -1,0 +1,94 @@
+@model CreateProduct
+
+@{
+    ViewBag.Title = "Изменение товара";
+    Layout = "_Layout";
+}
+
+<h2>Отредактируйте поля для изменения товара</h2>
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit" method="post">
+            <div class="form-group mb-3">
+                <label for="prod_name" class="mb-2">Наименование продукта</label>
+                <input asp-for="Product.ProductName"
+                       type="text"
+                       class="form-control"
+                       id="prod_name"
+                       placeholder="Телефон"
+                       value="@Model.Product.ProductName">
+            </div>
+            <div class="form-group mb-3">
+                <select asp-for="Product.BrandId" class="form-select">
+                    <option selected value="@Model.Product.Brand.Name">@Model.Product.Brand.Name</option>
+                        @foreach (var brand in Model.Brands)
+                        {
+                            <option value="@brand.Id">@brand.Name</option>
+                        }
+                </select>
+            </div>
+            <div class="form-group mb-3">
+                <select asp-for="Product.CategoryId" class="form-select">
+                    <option selected value="@Model.Product.Category.Name">@Model.Product.Category.Name</option>
+                        @foreach (var category in Model.Categories)
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
+                </select>
+            </div>
+            <div class="form-group mb-3">
+                            <label for="model" class="mb-2">Модель</label>
+                            <input  asp-for="Product.Model"
+                                   type="text"
+                                   class="form-control"
+                                   id="model"
+                                   placeholder="IPhone 14 Pro"
+                                   value="@Model.Product.Model">
+                        </div>
+            <div class="form-group mb-3">
+                <label for="description" class="mb-2">Описание</label>
+                <textarea  asp-for="Product.Description"
+                       type="text"
+                       class="form-control"
+                       id="description"
+                       placeholder="Отличная штука, умеет много, стоит не дорого"
+                        value="@Model.Product.Description">
+                </textarea>
+            </div>
+            <div class="form-group mb-3">
+                <label for="price" class="mb-2">Цена</label>
+                <input asp-for="Product.Price"
+                       type="text"
+                       class="form-control"
+                       id="price"
+                       placeholder="10000000000000$"
+                       value="@Model.Product.Price">
+            </div>
+            <div class="form-group mb-3">
+                <label for="img" class="mb-2">Картинка</label>
+                <input asp-for="Product.Image"
+                       type="text"
+                       class="form-control"
+                       id="img"
+                       placeholder="https:\\example.jpg"
+                       value="@Model.Product.Image">
+            </div>
+            <input type="hidden" value="@Model.Product.Id" asp-for="Product.Id">
+            <input type="hidden" value="@Model.Product.DateOfCreate" asp-for="Product.DateOfCreate">
+            <button type="submit" class="btn btn-outline-info mt-3">Редактировать</button>
+        </form>
+    </div>
+    <div class="mt-5">
+    @{
+        if (Model.ErrorViewModel.Errors.Any())
+           {
+               foreach (var error in Model.ErrorViewModel.Errors)
+               {
+                    <p class="p-3 text-danger-emphasis bg-danger-subtle border border-danger-subtle rounded-3">
+                        @error.ErrorMessage
+                    </p>
+               }
+           }
+    }
+    </div>
+</div>

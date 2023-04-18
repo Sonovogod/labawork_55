@@ -1,0 +1,56 @@
+@model BrandAndErrors
+
+@{
+    ViewBag.Title = "Добавить бренд";
+    Layout = "_Layout";
+}
+@if (Model.Brands.Any())
+{
+    <h2>Существующие бренды</h2>
+    <table class="table" style="width: 100%;">
+        <tr>
+            <th>#ID</th>
+            <th>Наименование</th>
+            <th>Действие</th>
+        </tr>
+    @foreach (var brand in Model.Brands)
+    {
+        <tr>
+            <td>@brand.Id</td>
+            <td>@brand.Name</td>
+            <td><a asp-controller="Brands"
+                   asp-action="Delete"
+                   asp-route-id="@brand.Id" class="my-3 btn btn-danger d-inline">Удалить</a></td>
+        </tr>
+    }
+    </table>
+}
+<h2>Заполните поле для добавления нового бренда</h2>
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="CreateBrand" method="post" asp-controller="Brands">
+        <div>
+            <label for="name">Наименование бренда</label>
+            <input asp-for="Brand.Name"
+                   type="text"
+                   class="form-control"
+                   id="name"
+                   placeholder="Asus">
+        </div>
+            <button type="submit" class="btn btn-outline-info mt-3">Добавить</button>
+        </form>
+    </div>
+</div>
+<div class="mt-5">
+    @{
+        if (Model.ErrorViewModel.Errors.Any())
+        {
+           foreach (var error in Model.ErrorViewModel.Errors)
+           {
+                <p class="p-3 text-danger-emphasis bg-danger-subtle border border-danger-subtle rounded-3">
+                    @error.ErrorMessage
+                </p>
+           }
+        }
+    }
+</div>

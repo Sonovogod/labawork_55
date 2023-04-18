@@ -1,0 +1,56 @@
+@model CategoryAndErrors
+
+@{
+    ViewBag.Title = "Добавить категорию";
+    Layout = "_Layout";
+}
+@if (Model.Categories.Any())
+{
+    <h2>Существующие категории</h2>
+    <table class="table" style="width: 100%;">
+        <tr>
+            <th>#ID</th>
+            <th>Наименование</th>
+            <th>Действие</th>
+        </tr>
+    @foreach (var category in Model.Categories)
+    {
+        <tr>
+            <td>@category.Id</td>
+            <td>@category.Name</td>
+            <td><a asp-controller="Categories"
+                   asp-action="Delete"
+                   asp-route-id="@category.Id" class="my-3 btn btn-danger d-inline">Удалить</a></td>
+        </tr>
+    }
+    </table>
+}
+<h2>Заполните поле для добавления новой категории</h2>
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="CreateCategory" method="post" asp-controller="Categories">
+            <div class="form-group mb-3">
+                <label for="name">Наименование категории</label>
+                <input asp-for="Category.Name"
+                       type="text"
+                       class="form-control"
+                       id="name"
+                       placeholder="Ноутбуки">
+            </div>
+            <button type="submit" class="btn btn-outline-info mt-3">Добавить</button>
+        </form>
+    </div>
+</div>
+<div class="mt-5">
+    @{
+        if (Model.ErrorViewModel.Errors.Any())
+        {
+           foreach (var error in Model.ErrorViewModel.Errors)
+           {
+                <p class="p-3 text-danger-emphasis bg-danger-subtle border border-danger-subtle rounded-3">
+                    @error.ErrorMessage
+                </p>
+           }
+        }
+    }
+</div>
