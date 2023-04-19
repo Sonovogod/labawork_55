@@ -15,7 +15,7 @@ public class BrandService : IBrandService
 
     public List<BrandViewModel> GetAll()
     {
-        return _db.Brands.Select(b => new BrandViewModel
+        return _db.Category.Select(b => new BrandViewModel
         {
             Id = b.Id,
             Name = b.Name
@@ -24,23 +24,23 @@ public class BrandService : IBrandService
  
 
     public Brand? GetById(int id)
-        => _db.Brands.FirstOrDefault(x=> x.Id == id);
+        => _db.Category.FirstOrDefault(x=> x.Id == id);
 
     public void Add(Brand? section)
     {
         if (section == null) return;
-        _db.Brands.Add(section);
+        _db.Category.Add(section);
         _db.SaveChanges();
     }
 
     public void Delete(Brand? section)
     {
         if (section == null) return;
-        _db.Brands.Remove(section);
+        _db.Category.Remove(section);
         _db.SaveChanges();
     }
 
     public bool IsExist(string name) 
-        => _db.Brands.Any(x => x.NormalizeName.Equals(name));
+        => _db.Category.Any(x => x.NormalizeName.Equals(name));
     
 }

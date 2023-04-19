@@ -1,9 +1,10 @@
 using LabaWork.Models;
 using LabaWork.Services.Abstract;
+using LabaWork.Services.ViewModels;
 
 namespace LabaWork.Services;
 
-public class CategoryService : ISectionService<Category>
+public class CategoryService : ICategoryService
 {
     private readonly ProductContext _db;
 
@@ -12,8 +13,14 @@ public class CategoryService : ISectionService<Category>
         _db = db;
     }
 
-    public List<Category> GetAll()
-        => _db.Categories.ToList();
+    public List<CategoryViewModel> GetAll()
+    {
+        return _db.Categories.Select(c => new CategoryViewModel
+        {
+            Id = c.Id,
+            Name = c.Name
+        }).ToList();
+    }
  
 
     public Category? GetById(int id)

@@ -12,16 +12,16 @@ public class ProductsController : Controller
     private readonly IProductService _productService;
     private readonly ProductValidator _productValidator;
     private readonly CreateProduct _createProduct;
-    private readonly ISectionService<Brand> _brandService;
-    private readonly ISectionService<Category> _categoryService;
+    private readonly ICategoryService _brandService;
+    private readonly ICategoryService _categoryService;
     private readonly IFileService _fileService;
 
     public ProductsController(
         IProductService productService, 
         ProductValidator productValidator, 
         CreateProduct createProduct,
-        ISectionService<Brand> brandService, 
-        ISectionService<Category> categoryService, IFileService fileService)
+        ICategoryService brandService, 
+        ICategoryService categoryService, IFileService fileService)
     {
         _productService = productService;
         _productValidator = productValidator;

@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LabaWork.Controllers;
 
-public class BrandValidationController : Controller
+public class CategoryValidationController : Controller
 {
     private readonly ProductContext _db;
 
-    public BrandValidationController(ProductContext db)
+    public CategoryValidationController(ProductContext db)
     {
         _db = db;
     }

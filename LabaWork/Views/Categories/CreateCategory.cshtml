@@ -1,4 +1,4 @@
-@model CategoryAndErrors
+@model CreateCategoryViewModel
 
 @{
     ViewBag.Title = "Добавить категорию";
@@ -36,21 +36,18 @@
                        class="form-control"
                        id="name"
                        placeholder="Ноутбуки">
+                <span class="text-danger" asp-validation-for="Category.Name"></span>
             </div>
+            <input type="hidden" value="@Model.Category.Id">
             <button type="submit" class="btn btn-outline-info mt-3">Добавить</button>
         </form>
     </div>
 </div>
 <div class="mt-5">
+@section Scripts
+{
     @{
-        if (Model.ErrorViewModel.Errors.Any())
-        {
-           foreach (var error in Model.ErrorViewModel.Errors)
-           {
-                <p class="p-3 text-danger-emphasis bg-danger-subtle border border-danger-subtle rounded-3">
-                    @error.ErrorMessage
-                </p>
-           }
-        }
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+}
 </div>

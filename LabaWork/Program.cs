@@ -12,16 +12,15 @@ builder.Services.AddControllersWithViews();
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ProductContext>(option => option.UseNpgsql(connection));
 builder.Services.AddScoped<IProductService, ProductService>();    
-builder.Services.AddScoped<ISectionService<Category>, CategoryService>();    
+builder.Services.AddScoped<ICategoryService, CategoryService>();    
 builder.Services.AddScoped<IBrandService, BrandService>();
+builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<ProductValidator>();
-builder.Services.AddScoped<CategoryValidator>();
-builder.Services.AddScoped<CategoryAndErrors>();
 builder.Services.AddScoped<CreateProduct>();
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<OrderValidator>();
 builder.Services.AddScoped<OrderAndErrors>();
-builder.Services.AddScoped<IFileService, FileService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

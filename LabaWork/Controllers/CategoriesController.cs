@@ -1,6 +1,8 @@
+using LabaWork.Extensions;
 using LabaWork.Models;
 using LabaWork.Models.ModelAndErrors;
 using LabaWork.Services.Abstract;
+using LabaWork.Services.ViewModels;
 using LabaWork.Validators;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,41 +10,32 @@ namespace LabaWork.Controllers;
 
 public class CategoriesController : Controller
 {
-    private readonly ISectionService<Category> _categoryService;
-    private readonly CategoryValidator _categoryValidator;
-    private readonly CategoryAndErrors _categoryAndErrors;
+    private readonly ICategoryService _categoryService;
 
-    public CategoriesController(ISectionService<Category> categoryService, CategoryValidator categoryValidator, CategoryAndErrors categoryAndErrors)
+    public CategoriesController(ICategoryService categoryService)
     {
         _categoryService = categoryService;
-        _categoryValidator = categoryValidator;
-        _categoryAndErrors = categoryAndErrors;
     }
 
 
     [HttpGet]
     public IActionResult CreateCategory()
     {
-        _categoryAndErrors.Categories = _categoryService.GetAll();
-        return View(_categoryAndErrors);
+        CreateCategoryViewModel createCategoryViewModel = new CreateCategoryViewModel()
+        {
+            Categories = _categoryService.GetAll()
+        };
+        return View(createCategoryViewModel);
     }
     
     [HttpPost]
-    public IActionResult CreateCategory(Category? category)
+    public IActionResult CreateCategory(CreateCategoryViewModel createCategoryViewModel)
     {
-        if (category == null) return NotFound();
-        
-        var validResult = _categoryValidator.Validate(category);
-        if (validResult.IsValid)
+        if (ModelState.IsValid)
         {
+            Category category = CategoryExtension.MapToBrandModel(createCategoryViewModel.Category);
             category.NormalizeName = category.Name.Trim().ToUpper();
             _categoryService.Add(category);
-        }
-        else
-        {
-            _categoryAndErrors.Categories = _categoryService.GetAll();
-            _categoryAndErrors.ErrorViewModel.Errors = validResult.Errors;
-            return View(_categoryAndErrors);
         }
         
         return RedirectToAction("CreateCategory");
