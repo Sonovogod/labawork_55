@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<ProductContext>(option => option.UseSqlite(connection));
+builder.Services.AddDbContext<ProductContext>(option => option.UseNpgsql(connection));
 builder.Services.AddScoped<IProductService, ProductService>();    
 builder.Services.AddScoped<ISectionService<Category>, CategoryService>();    
 builder.Services.AddScoped<ISectionService<Brand>, BrandService>();
