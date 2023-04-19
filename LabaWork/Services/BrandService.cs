@@ -1,9 +1,10 @@
 using LabaWork.Models;
 using LabaWork.Services.Abstract;
+using LabaWork.Services.ViewModels;
 
 namespace LabaWork.Services;
 
-public class BrandService : ISectionService<Brand>
+public class BrandService
 {
     private readonly ProductContext _db;
 
@@ -12,8 +13,14 @@ public class BrandService : ISectionService<Brand>
         _db = db;
     }
 
-    public List<Brand> GetAll()
-        => _db.Brands.ToList();
+    public List<BrandViewModel> GetAll()
+    {
+        return _db.Brands.Select(b => new BrandViewModel
+        {
+            Id = b.Id,
+            Name = b.Name
+        }).ToList();
+    }
  
 
     public Brand? GetById(int id)

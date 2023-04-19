@@ -13,11 +13,9 @@ string connection = builder.Configuration.GetConnectionString("DefaultConnection
 builder.Services.AddDbContext<ProductContext>(option => option.UseNpgsql(connection));
 builder.Services.AddScoped<IProductService, ProductService>();    
 builder.Services.AddScoped<ISectionService<Category>, CategoryService>();    
-builder.Services.AddScoped<ISectionService<Brand>, BrandService>();
+builder.Services.AddScoped<BrandService>();
 builder.Services.AddScoped<ProductValidator>();
 builder.Services.AddScoped<CategoryValidator>();
-builder.Services.AddScoped<BrandValidator>();
-builder.Services.AddScoped<BrandAndErrors>();
 builder.Services.AddScoped<CategoryAndErrors>();
 builder.Services.AddScoped<CreateProduct>();
 builder.Services.AddScoped<OrderService>();

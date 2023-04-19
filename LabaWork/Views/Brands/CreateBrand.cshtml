@@ -1,4 +1,5 @@
-@model BrandAndErrors
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model CreateBrandViewModel
 
 @{
     ViewBag.Title = "Добавить бренд";
@@ -29,28 +30,25 @@
 <div class="row">
     <div class="col-md-6">
         <form asp-action="CreateBrand" method="post" asp-controller="Brands">
-        <div>
-            <label for="name">Наименование бренда</label>
-            <input asp-for="Brand.Name"
-                   type="text"
-                   class="form-control"
-                   id="name"
-                   placeholder="Asus">
-        </div>
+            <div>
+                <label for="name">Наименование бренда</label>
+                <input asp-for="Brand.Name"
+                       type="text"
+                       class="form-control"
+                       id="name"
+                       placeholder="Asus">
+                <span class="text-danger" asp-validation-for="Brand.Name"></span>
+            </div>
+            <input type="hidden" value="@Model.Brand.Id">
             <button type="submit" class="btn btn-outline-info mt-3">Добавить</button>
         </form>
     </div>
 </div>
 <div class="mt-5">
+@section Scripts
+{
     @{
-        if (Model.ErrorViewModel.Errors.Any())
-        {
-           foreach (var error in Model.ErrorViewModel.Errors)
-           {
-                <p class="p-3 text-danger-emphasis bg-danger-subtle border border-danger-subtle rounded-3">
-                    @error.ErrorMessage
-                </p>
-           }
-        }
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+}
 </div>

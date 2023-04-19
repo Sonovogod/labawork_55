@@ -1,6 +1,8 @@
+using LabaWork.Extensions;
 using LabaWork.Models;
 using LabaWork.Models.ModelAndErrors;
 using LabaWork.Services.Abstract;
+using LabaWork.Services.ViewModels;
 using LabaWork.Validators;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,39 +11,30 @@ namespace LabaWork.Controllers;
 public class BrandsController : Controller
 {
     private readonly ISectionService<Brand> _brandService;
-    private readonly BrandAndErrors _brandAndErrors;
-    private readonly BrandValidator _brandValidator;
 
-    public BrandsController(ISectionService<Brand> brandService, BrandAndErrors brandAndErrors, BrandValidator brandValidator)
+    public BrandsController(ISectionService<Brand> brandService)
     {
         _brandService = brandService;
-        _brandAndErrors = brandAndErrors;
-        _brandValidator = brandValidator;
     }
 
     [HttpGet]
     public IActionResult CreateBrand()
     {
-        _brandAndErrors.Brands = _brandService.GetAll();
-        return View(_brandAndErrors);
+        CreateBrandViewModel CreateBrandViewModel = new CreateBrandViewModel()
+        {
+            Brands = _brandService.GetAll()
+        };
+        return View(CreateBrandViewModel);
     }
     
     [HttpPost]
-    public IActionResult CreateBrand(Brand? brand)
+    public IActionResult CreateBrand(CreateBrandViewModel? createBrandViewModel)
     {
-        if (brand == null) return NotFound();
-        
-        var validResult = _brandValidator.Validate(brand);
-        if (validResult.IsValid)
+        if (ModelState.IsValid)
         {
+            Brand brand = BrandExtension.MapToBrandModel(createBrandViewModel.Brand);
             brand.NormalizeName = brand.Name.Trim().ToUpper();
             _brandService.Add(brand);
-        }
-        else
-        {
-            _brandAndErrors.Brands = _brandService.GetAll();
-            _brandAndErrors.ErrorViewModel.Errors = validResult.Errors;
-            return View(_brandAndErrors);
         }
         
         return RedirectToAction("CreateBrand");
