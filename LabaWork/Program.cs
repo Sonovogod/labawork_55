@@ -13,7 +13,7 @@ string connection = builder.Configuration.GetConnectionString("DefaultConnection
 builder.Services.AddDbContext<ProductContext>(option => option.UseNpgsql(connection));
 builder.Services.AddScoped<IProductService, ProductService>();    
 builder.Services.AddScoped<ISectionService<Category>, CategoryService>();    
-builder.Services.AddScoped<BrandService>();
+builder.Services.AddScoped<IBrandService, BrandService>();
 builder.Services.AddScoped<ProductValidator>();
 builder.Services.AddScoped<CategoryValidator>();
 builder.Services.AddScoped<CategoryAndErrors>();

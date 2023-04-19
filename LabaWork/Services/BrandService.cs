@@ -4,7 +4,7 @@ using LabaWork.Services.ViewModels;
 
 namespace LabaWork.Services;
 
-public class BrandService
+public class BrandService : IBrandService
 {
     private readonly ProductContext _db;
 

@@ -1,18 +1,15 @@
 using LabaWork.Extensions;
 using LabaWork.Models;
-using LabaWork.Models.ModelAndErrors;
-using LabaWork.Services.Abstract;
 using LabaWork.Services.ViewModels;
-using LabaWork.Validators;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LabaWork.Controllers;
 
 public class BrandsController : Controller
 {
-    private readonly ISectionService<Brand> _brandService;
+    private readonly IBrandService _brandService;
 
-    public BrandsController(ISectionService<Brand> brandService)
+    public BrandsController(IBrandService brandService)
     {
         _brandService = brandService;
     }
