@@ -38,16 +38,14 @@
                        placeholder="Ноутбуки">
                 <span class="text-danger" asp-validation-for="Category.Name"></span>
             </div>
-            <input type="hidden" value="@Model.Category.Id">
             <button type="submit" class="btn btn-outline-info mt-3">Добавить</button>
         </form>
     </div>
 </div>
-<div class="mt-5">
+
 @section Scripts
 {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
-</div>

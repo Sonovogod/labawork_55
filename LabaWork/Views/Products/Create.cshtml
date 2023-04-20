@@ -1,4 +1,4 @@
-@model CreateProduct
+@model CreateProductViewModel
 
 @{
     ViewBag.Title = "Создание товара";
@@ -16,6 +16,7 @@
                        class="form-control"
                        id="prod_name"
                        placeholder="Телефон">
+                <span class="text-danger" asp-validation-for="Product.ProductName"></span>
             </div>
             <div class="form-group mb-3">
                 <select asp-for="Product.BrandId" class="form-select">
@@ -32,6 +33,7 @@
                         }
                     }
                 </select>
+                <span class="text-danger" asp-validation-for="Product.BrandId"></span>
             </div>
             <div class="form-group mb-3">
                 <select asp-for="Product.CategoryId" class="form-select">
@@ -48,15 +50,17 @@
                         }
                     }
                 </select>
+                <span class="text-danger" asp-validation-for="Product.CategoryId"></span>
             </div>
             <div class="form-group mb-3">
-                            <label for="model" class="mb-2">Модель</label>
-                            <input  asp-for="Product.Model"
-                                   type="text"
-                                   class="form-control"
-                                   id="model"
-                                   placeholder="IPhone 14 Pro">
-                        </div>
+                <label for="model" class="mb-2">Модель</label>
+                <input  asp-for="Product.Model"
+                        type="text"
+                        class="form-control"
+                        id="model"
+                        placeholder="IPhone 14 Pro">
+                <span class="text-danger" asp-validation-for="Product.Model"></span>
+            </div>
             <div class="form-group mb-3">
                 <label for="description" class="mb-2">Описание</label>
                 <textarea  asp-for="Product.Description"
@@ -65,6 +69,7 @@
                        id="description"
                        placeholder="Отличная штука, умеет много, стоит не дорого">
                 </textarea>
+                <span class="text-danger" asp-validation-for="Product.Description"></span>
             </div>
             <div class="form-group mb-3">
                 <label for="price" class="mb-2">Цена</label>
@@ -73,25 +78,20 @@
                        class="form-control"
                        id="price"
                        placeholder="10000000000000$">
+                <span class="text-danger" asp-validation-for="Product.Price"></span>
             </div>
             <div class="form-group mb-3">
                 <label class="mb-2" for="inputGroupFile01">Картинка</label>
                 <input type="file" class="form-control" id="inputGroupFile01" name="uploadedFile">
+                <span class="text-danger" asp-validation-for="Product.Image"></span>
             </div>
             <button type="submit" class="btn btn-outline-info mt-3">Создать</button>
         </form>
     </div>
-    <div class="mt-5">
-    @{
-        if (Model.ErrorViewModel.Errors.Any())
-           {
-               foreach (var error in Model.ErrorViewModel.Errors)
-               {
-                    <p class="p-3 text-danger-emphasis bg-danger-subtle border border-danger-subtle rounded-3">
-                        @error.ErrorMessage
-                    </p>
-               }
-           }
-    }
-    </div>
 </div>
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

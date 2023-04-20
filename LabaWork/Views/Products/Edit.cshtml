@@ -1,4 +1,4 @@
-@model CreateProduct
+@model CreateProductViewModel
 
 @{
     ViewBag.Title = "Изменение товара";
@@ -78,17 +78,10 @@
             <button type="submit" class="btn btn-outline-info mt-3">Редактировать</button>
         </form>
     </div>
-    <div class="mt-5">
-    @{
-        if (Model.ErrorViewModel.Errors.Any())
-           {
-               foreach (var error in Model.ErrorViewModel.Errors)
-               {
-                    <p class="p-3 text-danger-emphasis bg-danger-subtle border border-danger-subtle rounded-3">
-                        @error.ErrorMessage
-                    </p>
-               }
-           }
-    }
-    </div>
 </div>
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

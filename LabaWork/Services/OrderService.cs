@@ -1,10 +1,12 @@
 using LabaWork.Models;
+using LabaWork.Services.Abstract;
+using LabaWork.Services.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LabaWork.Services;
 
-public class OrderService
+public class OrderService : IOrderService
 {
     private readonly ProductContext _db;
 
@@ -13,9 +15,18 @@ public class OrderService
         _db = db;
     }
 
-    public List<Order> GetAll()
+    public List<OrderViewModel> GetAll()
     {
-        var orders = _db.Orders.Include(x => x.Product).ToList();
+        List<OrderViewModel> orders = _db.Orders.Include(x => x.Product)
+            .Select(order => new OrderViewModel
+            {
+                Id = order.Id,
+                Address = order.Adress,
+                Name = order.Name,
+                PhoneNumber = order.PhoneNumber,
+                Product = order.Product,
+                ProductId = order.ProductId
+            }).ToList();
         return orders;
     }
 

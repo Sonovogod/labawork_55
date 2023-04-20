@@ -1,4 +1,4 @@
-@model List<Order>
+@model List<OrderViewModel>
 
 @{
     ViewBag.Title = "Заказы";
@@ -25,7 +25,7 @@ else
             <tr>
                 <td>@order.Id</td>
                 <td>@order.Name</td>
-                <td>@order.Adress</td>
+                <td>@order.Address</td>
                 <td>@order.PhoneNumber</td>
                 <td>@order.Product.Brand @order.Product.Model</td>
             </tr>

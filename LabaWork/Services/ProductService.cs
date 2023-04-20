@@ -1,5 +1,7 @@
+using LabaWork.Extensions;
 using LabaWork.Models;
 using LabaWork.Services.Abstract;
+using LabaWork.Services.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace LabaWork.Services;
@@ -14,20 +16,23 @@ public class ProductService : IProductService
     }
 
 
-    public List<Product> GetAll()
+    public List<ProductViewModel> GetAll()
     {
         var products = _db.Products
             .Include(x => x.Brand)
             .Include(x => x.Category)
+            .Select(product => ProductExtension.MapToProductViewModel(product))
             .ToList();
 
         return products;
     }
 
-    public Product? GetById(int id)
+    public ProductViewModel? GetById(int id)
     {
-        var products = GetAll();
-        return products.FirstOrDefault(x => x.Id == id);
+        List<ProductViewModel> productViewModels = GetAll();
+        ProductViewModel productViewModel = productViewModels.FirstOrDefault(x => x.Id == id);
+        
+        return productViewModel;
     }
 
     public void Add(Product? product)

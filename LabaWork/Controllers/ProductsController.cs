@@ -1,8 +1,7 @@
+using LabaWork.Extensions;
 using LabaWork.Models;
-using LabaWork.Models.ModelAndErrors;
-using LabaWork.Services;
 using LabaWork.Services.Abstract;
-using LabaWork.Validators;
+using LabaWork.Services.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LabaWork.Controllers;
@@ -10,22 +9,16 @@ namespace LabaWork.Controllers;
 public class ProductsController : Controller
 {
     private readonly IProductService _productService;
-    private readonly ProductValidator _productValidator;
-    private readonly CreateProduct _createProduct;
-    private readonly ICategoryService _brandService;
+    private readonly IBrandService _brandService;
     private readonly ICategoryService _categoryService;
     private readonly IFileService _fileService;
 
     public ProductsController(
-        IProductService productService, 
-        ProductValidator productValidator, 
-        CreateProduct createProduct,
-        ICategoryService brandService, 
+        IProductService productService,
+        IBrandService brandService, 
         ICategoryService categoryService, IFileService fileService)
     {
         _productService = productService;
-        _productValidator = productValidator;
-        _createProduct = createProduct;
         _brandService = brandService;
         _categoryService = categoryService;
         _fileService = fileService;
@@ -34,59 +27,52 @@ public class ProductsController : Controller
     [HttpGet]
     public IActionResult AllProducts()
     {
-        List<Product> products = _productService.GetAll();
+        List<ProductViewModel> products = _productService.GetAll();
         return View(products);
     }
     
     [HttpGet]
     public IActionResult Create()
     {
-        GetBrandsAndCategories();
-        return View(_createProduct);
+        CreateProductViewModel createProductViewModel = new CreateProductViewModel()
+        {
+            Categories = _categoryService.GetAll(),
+            Brands = _brandService.GetAll()
+        };
+  
+        return View(createProductViewModel);
     }
     
     [HttpPost]
-    public IActionResult Create(Product? product, IFormFile uploadedFile)
+    public IActionResult Create(CreateProductViewModel? createProductViewModel, IFormFile uploadedFile)
     {
-        if (product == null) return NotFound();
-
-        var validResult = _productValidator.Validate(product);
-        if (validResult.IsValid)
+        if (ModelState.IsValid)
         {
+            Product product = ProductExtension.MapToProductModel(createProductViewModel.Product);
             _fileService.Upload($"{product.Brand}_{product.ProductName}.txt");
             product.Image = _fileService.SaveFileAndGetPath(product, uploadedFile);
             _productService.Add(product);
+            return RedirectToAction("AllProducts");
         }
-        else
-        {
-            GetBrandsAndCategories();
-            _createProduct.ErrorViewModel.Errors = validResult.Errors;
-            return View(_createProduct); 
-        }
-        return RedirectToAction("AllProducts");
-    }
-
-    [NonAction]
-    private void GetBrandsAndCategories()
-    {
-        _createProduct.Categories = _categoryService.GetAll();
-        _createProduct.Brands = _brandService.GetAll();
+  
+        return RedirectToAction("Create");
     }
 
     [HttpGet]
     public IActionResult About(int id)
     {
-        var product = _productService.GetById(id);
-        if (product is null) return NotFound();
-
-        return View(product);
+        ProductViewModel? productViewModel = _productService.GetById(id);
+        if (productViewModel is null) return NotFound();
+        
+        return View(productViewModel);
     }
     
     [HttpGet]
     public IActionResult Delete(int id)
     {
-        Product? product = _productService.GetById(id);
-        if (product is null) return NotFound();
+        ProductViewModel? productViewModel = _productService.GetById(id);
+        if (productViewModel is null) return NotFound();
+        Product? product = ProductExtension.MapToProductModel(productViewModel);
         _productService.DeleteProduct(product);
         
         return RedirectToAction("AllProducts");
@@ -95,34 +81,29 @@ public class ProductsController : Controller
     [HttpGet]
     public IActionResult Edit(int id)
     {
-        Product? product = _productService.GetById(id);
-        if (product is null) return NotFound();
+        ProductViewModel? productViewModel = _productService.GetById(id);
+        if (productViewModel is null) return NotFound();
 
-        GetBrandsAndCategories();
-        _createProduct.Product = product;
-        return View(_createProduct);
+        CreateProductViewModel createProductViewModel = new CreateProductViewModel()
+        {
+            Product = productViewModel,
+            Brands = _brandService.GetAll(),
+            Categories = _categoryService.GetAll()
+        };
+        
+        return View(createProductViewModel);
     }
     
     [HttpPost]
-    public IActionResult Edit(Product? product)
+    public IActionResult Edit(CreateProductViewModel? createProductViewModel)
     {
-        if (product == null) return NotFound();
-        var validResult = _productValidator.Validate(product);
-        if (validResult.IsValid)
+        if (ModelState.IsValid)
         {
+            Product product = ProductExtension.MapToProductModel(createProductViewModel.Product);
             _productService.EditProduct(product);
-        }
-        else
-        {
-            Product? newProduct = _productService.GetById(product.Id);
-            if (newProduct is null) return NotFound();
-            
-            GetBrandsAndCategories();
-            _createProduct.Product = newProduct;
-            _createProduct.ErrorViewModel.Errors = validResult.Errors;
-            return View(_createProduct);
+            return RedirectToAction("About", new { id = product.Id });
         }
 
-        return RedirectToAction("AllProducts");
+        return RedirectToAction("Edit", new {id = createProductViewModel.Product.Id});
     }
 }

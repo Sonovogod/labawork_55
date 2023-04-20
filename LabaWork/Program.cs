@@ -1,8 +1,6 @@
 using LabaWork.Models;
-using LabaWork.Models.ModelAndErrors;
 using LabaWork.Services;
 using LabaWork.Services.Abstract;
-using LabaWork.Validators;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,16 +8,17 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<ProductContext>(option => option.UseNpgsql(connection));
+builder.Services.AddDbContext<ProductContext>(option =>
+{
+    option.UseNpgsql(connection);
+    option.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+});
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 builder.Services.AddScoped<IProductService, ProductService>();    
 builder.Services.AddScoped<ICategoryService, CategoryService>();    
 builder.Services.AddScoped<IBrandService, BrandService>();
 builder.Services.AddScoped<IFileService, FileService>();
-builder.Services.AddScoped<ProductValidator>();
-builder.Services.AddScoped<CreateProduct>();
-builder.Services.AddScoped<OrderService>();
-builder.Services.AddScoped<OrderValidator>();
-builder.Services.AddScoped<OrderAndErrors>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 var app = builder.Build();
 

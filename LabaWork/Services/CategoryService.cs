@@ -15,7 +15,7 @@ public class CategoryService : ICategoryService
 
     public List<CategoryViewModel> GetAll()
     {
-        return _db.Categories.Select(c => new CategoryViewModel
+        return _db.Category.Select(c => new CategoryViewModel
         {
             Id = c.Id,
             Name = c.Name
@@ -24,23 +24,23 @@ public class CategoryService : ICategoryService
  
 
     public Category? GetById(int id)
-        => _db.Categories.FirstOrDefault(x=> x.Id == id);
+        => _db.Category.FirstOrDefault(x=> x.Id == id);
 
     public void Add(Category? section)
     {
         if (section == null) return;
-        _db.Categories.Add(section);
+        _db.Category.Add(section);
         _db.SaveChanges();
     }
 
     public void Delete(Category? section)
     {
         if (section == null) return;
-        _db.Categories.Remove(section);
+        _db.Category.Remove(section);
         _db.SaveChanges();
     }
 
     public bool IsExist(string name)
-        => _db.Categories.Any(x => x.NormalizeName.Equals(name));
+        => _db.Category.Any(x => x.NormalizeName.Equals(name));
     
 }

@@ -1,60 +1,56 @@
-using FluentValidation.Results;
+using LabaWork.Extensions;
 using LabaWork.Models;
-using LabaWork.Models.ModelAndErrors;
-using LabaWork.Services;
 using LabaWork.Services.Abstract;
-using LabaWork.Validators;
+using LabaWork.Services.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LabaWork.Controllers;
 
 public class OrdersController : Controller
 {
-    private readonly OrderService _orderService;
-    private readonly OrderValidator _orderValidator;
-    private readonly OrderAndErrors _orderAndErrors;
+    private readonly IOrderService _orderService;
     private readonly IProductService _productService;
 
-    public OrdersController(OrderService orderService, OrderValidator orderValidator, OrderAndErrors orderAndErrors, IProductService productService)
+    public OrdersController(IOrderService orderService, IProductService productService)
     {
         _orderService = orderService;
-        _orderValidator = orderValidator;
-        _orderAndErrors = orderAndErrors;
         _productService = productService;
     }
 
     [HttpGet]
     public IActionResult GetAllOrders()
     {
-        var orders = _orderService.GetAll();
+        List<OrderViewModel> orders = _orderService.GetAll();
         return View(orders);
     }
     
     [HttpGet]
     public IActionResult Create(int id)
     {
-        var product = _productService.GetById(id);
-        if (product == null) return NotFound();
-        _orderAndErrors.Order.Product = product;
-        
-        return View(_orderAndErrors);
+        ProductViewModel? productViewModel = _productService.GetById(id);
+        if (productViewModel == null) return NotFound();
+        Product? product = ProductExtension.MapToProductModel(productViewModel);
+        CreateOrderViewModel createOrderViewModel = new CreateOrderViewModel()
+        {
+            ShortProduct = ProductExtension.MapToShortProductViewModel(product)
+        };
+
+        return View(createOrderViewModel);
     }
     
     [HttpPost]
-    public IActionResult Create(Order order)
+    public IActionResult Create(CreateOrderViewModel createOrderViewModel)
     {
-        ValidationResult validResult = _orderValidator.Validate(order);
-        if (validResult.IsValid)
+        if (ModelState.IsValid)
         {
-            order.Product = _productService.GetById(order.Product.Id);
+            Order order = OrderExtension.MapToOrderModel(createOrderViewModel.Order);
+            ProductViewModel? productViewModel = _productService.GetById(order.ProductId);
+            Product? product = ProductExtension.MapToProductModel(productViewModel);
+            order.Product = product;
             _orderService.Add(order);
             return RedirectToAction("GetAllOrders");
         }
-        _orderAndErrors.ErrorViewModel.Errors = validResult.Errors;
-        var product = _productService.GetById(order.Product.Id);
-        _orderAndErrors.Order.Product = product;
-        
-        
-        return View(_orderAndErrors);
+
+        return RedirectToAction("Create", new {id = createOrderViewModel.ShortProduct.Id});
     }
 }

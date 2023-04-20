@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LabaWork.Migrations
 {
     [DbContext(typeof(ProductContext))]
-    [Migration("20230418194948_Initial")]
-    partial class Initial
+    [Migration("20230420093902_rename fiel in the ProductContext")]
+    partial class renamefielintheProductContext
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -43,7 +43,7 @@ namespace LabaWork.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Brands");
+                    b.ToTable("Brand");
                 });
 
             modelBuilder.Entity("LabaWork.Models.Category", b =>
@@ -64,7 +64,7 @@ namespace LabaWork.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("LabaWork.Models.Order", b =>
@@ -80,7 +80,7 @@ namespace LabaWork.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("DateOfCreate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -119,10 +119,10 @@ namespace LabaWork.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("DateOfCreate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp");
 
                     b.Property<DateTime>("DateOfUpdate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp");
 
                     b.Property<string>("Description")
                         .IsRequired()
