@@ -35,6 +35,11 @@ public class ProductService : IProductService
         return productViewModel;
     }
 
+    public IQueryable<Product> GetQueryableProduct()
+    {
+        return _db.Products;
+    }
+
     public void Add(Product? product)
     {
         if (product == null) return;

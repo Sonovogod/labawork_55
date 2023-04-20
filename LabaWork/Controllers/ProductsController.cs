@@ -1,3 +1,4 @@
+using LabaWork.Enums;
 using LabaWork.Extensions;
 using LabaWork.Models;
 using LabaWork.Services.Abstract;
@@ -25,10 +26,64 @@ public class ProductsController : Controller
     }
 
     [HttpGet]
-    public IActionResult AllProducts()
+    public IActionResult AllProducts(ProductSortState sortState = ProductSortState.NameAsc)
     {
-        List<ProductViewModel> products = _productService.GetAll();
-        return View(products);
+        var products = _productService.GetQueryableProduct();
+        switch (sortState)
+        {
+            case ProductSortState.NameAsc:
+                products = products.OrderBy(x => x.ProductName);
+                break;
+            case ProductSortState.NameDesc:
+                products = products.OrderByDescending(x => x.ProductName);
+                break;
+            case ProductSortState.BrandAsc:
+                products = products.OrderBy(x => x.Brand);
+                break;
+            case ProductSortState.BrandDesc:
+                products = products.OrderByDescending(x => x.Brand);
+                break;
+            case ProductSortState.DateOfCreateAsc:
+                products = products.OrderBy(x => x.DateOfCreate);
+                break;
+            case ProductSortState.DateOfCreateDesc:
+                products = products.OrderByDescending(x => x.DateOfCreate);
+                break;
+            case ProductSortState.CategoryAsc:
+                products = products.OrderBy(x => x.Category);
+                break;
+            case ProductSortState.CategoryDesc:
+                products = products.OrderByDescending(x => x.Category);
+                break;
+            case ProductSortState.PriceAsc:
+                products = products.OrderBy(x => x.Price);
+                break;
+            case ProductSortState.PriceDesc:
+                products = products.OrderByDescending(x => x.Price);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(sortState), sortState, null);
+        }
+
+        ProductPageViewModel productPageViewModel = new ProductPageViewModel
+        {
+            Products = products.Select(p => new ProductViewModel
+            {
+                Id = p.Id,
+                Brand = p.Brand,
+                Category = p.Category,
+                DateOfCreate = p.DateOfCreate,
+                Image = p.Image,
+                Model = p.Model,
+                Price = p.Price
+            }).ToList(),
+            NameSort = sortState is ProductSortState.NameAsc? ProductSortState.NameDesc : ProductSortState.NameAsc,
+            BrandSort = sortState is ProductSortState.BrandAsc? ProductSortState.BrandDesc : ProductSortState.BrandAsc,
+            DateOfCreateSort = sortState is ProductSortState.DateOfCreateAsc? ProductSortState.DateOfCreateDesc : ProductSortState.DateOfCreateAsc,
+            CategorySort = sortState is ProductSortState.CategoryAsc? ProductSortState.CategoryDesc : ProductSortState.CategoryAsc,
+            PriceSort = sortState is ProductSortState.PriceAsc? ProductSortState.PriceDesc : ProductSortState.PriceAsc,
+        };
+        return View(productPageViewModel);
     }
     
     [HttpGet]

@@ -7,6 +7,7 @@ public interface IProductService
 {
     public List<ProductViewModel>  GetAll();
     public ProductViewModel? GetById(int id);
+    IQueryable<Product> GetQueryableProduct();
     public void Add(Product? product);
     public void EditProduct(Product? product);
     public void DeleteProduct(Product product);
