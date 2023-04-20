@@ -44,9 +44,7 @@ public class OrdersController : Controller
         if (ModelState.IsValid)
         {
             Order order = OrderExtension.MapToOrderModel(createOrderViewModel.Order);
-            ProductViewModel? productViewModel = _productService.GetById(order.ProductId);
-            Product? product = ProductExtension.MapToProductModel(productViewModel);
-            order.Product = product;
+            
             _orderService.Add(order);
             return RedirectToAction("GetAllOrders");
         }
