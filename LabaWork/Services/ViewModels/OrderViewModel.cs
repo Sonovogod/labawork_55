@@ -15,5 +15,5 @@ public class OrderViewModel
     [Required(ErrorMessage = "Поле не может быть пустым")]
     public string Address { get; set; }
     public int ProductId { get; set; }
-    public Product Product { get; set; }
+    public Product? Product { get; set; }
 }

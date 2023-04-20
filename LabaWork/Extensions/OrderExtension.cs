@@ -13,7 +13,7 @@ public static class OrderExtension
             Adress = orderViewModel.Address,
             Name = orderViewModel.Name,
             PhoneNumber = orderViewModel.PhoneNumber,
-            ProductId = orderViewModel.Product.Id
+            ProductId = orderViewModel.ProductId
         };
         return order;
     }
